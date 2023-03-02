@@ -5,6 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Threading;
 
 namespace Topic_4._5_Methods
 {
@@ -36,26 +37,35 @@ namespace Topic_4._5_Methods
 
         static void knockKnock()
         {
-            Console.WriteLine("Knock Knock...");
+            Console.WriteLine("\nKnock Knock...");
             Console.ReadLine();
             Console.WriteLine("Cow says");
             Console.ReadLine();
             Console.WriteLine("No, Cow says moo!");
+
+            Console.WriteLine("\nPress ENTER to continue");
+            Console.ReadLine();
         }
 
         static void asciiArt()
         {
             while (true)
             {
-                Console.WriteLine("Choose a drawing from the following: Alien, Cards, ");
+                Console.WriteLine("\nChoose a drawing from the following: Alien, Cards, Eienstein, AtAt");
                 string response = Console.ReadLine();
                 switch (response.ToUpper())
                 {
                     case "ALIEN":
-                        drawAlien();
+                        drawArt(@"Alien.txt");
                         break;
                     case "CARDS":
-                        drawCards();
+                        drawArt(@"PlayingCards.txt");
+                        break;
+                    case "EIENSTEIN":
+                        drawArt(@"Eienstein.txt");
+                        break;
+                    case "ATAT":
+                        drawArt(@"ATAT.txt");
                         break;
                     default:
                         Console.WriteLine("Not a valid Input!");
@@ -64,9 +74,9 @@ namespace Topic_4._5_Methods
                 break;
             }
         }
-        static void drawAlien()
+
+        public static List<int> coordPrompt()
         {
-            string[] lines = File.ReadAllLines(@"Alien.txt");
             string[] prompts = { "X Coordinate:", "Y Coordinate:" };
             List<int> coords = new List<int>();
 
@@ -90,27 +100,24 @@ namespace Topic_4._5_Methods
                 }
                 break;
             }
-
-            Console.WriteLine(Console.CursorTop);
-            coords[1] = coords[1] + Console.CursorTop;
-
-            
-            foreach (string line in lines.Select((value, i) => new { i, value }))
-            {
-                Console.SetCursorPosition(coords[0], coords[1]);
-                Console.WriteLine(line);
-            }
-            Console.ReadLine();
-            Console.WriteLine("Alien Drawn"); 
+            return coords;
         }
-        static void drawCards()
+        static void drawArt(string path)
         {
-            string[] lines = File.ReadAllLines(@"PlayingCards.txt");
+            string[] lines = File.ReadAllLines(path);
+            List<int> coords = coordPrompt();
+
+            coords[1] = coords[1] + Console.CursorTop;
+            Console.SetCursorPosition(coords[0], coords[1]);
+
             foreach (string line in lines)
             {
+                Console.SetCursorPosition(coords[0], Console.CursorTop);
+                Thread.Sleep(100);
                 Console.WriteLine(line);
             }
-            Console.WriteLine("Cards Drawn");
+            Console.WriteLine("Press ENTER to continue");
+            Console.ReadLine();
         }
     }
 }
